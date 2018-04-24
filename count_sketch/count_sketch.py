@@ -1,6 +1,8 @@
+import os
 import tensorflow as tf
 
-_sketch_op = tf.load_op_library('./build/count_sketch.so')
+CUR_PATH = os.path.split(os.path.realpath(__file__))[0]
+_sketch_op = tf.load_op_library(os.path.join(CUR_PATH, 'build', 'count_sketch.so'))
 
 def count_sketch(probs, project_size):
     """ Calculates count-min sketch of a tensor.
@@ -53,5 +55,5 @@ def bilinear_pool(x1, x2, output_size):
     pc1 = tf.complex(p1, tf.zeros_like(p1))
     pc2 = tf.complex(p2, tf.zeros_like(p2))
 
-    conved = tf.batch_ifft(tf.batch_fft(pc1) * tf.batch_fft(pc2))
+    conved = tf.ifft(tf.fft(pc1) * tf.fft(pc2))
     return tf.real(conved)
